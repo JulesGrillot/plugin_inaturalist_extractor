@@ -1,0 +1,25 @@
+[general]
+name=iNaturalist Extractor
+about=Extract data from iNaturalist database from an extent.
+category=Database
+hasProcessingProvider=False
+description=Extract data from iNaturalist database drom an extent.
+icon=resources/images/default_icon.png
+tags=data, iNaturalist, environement
+
+# credits and contact
+author=Jules GRILLOT
+email=jules.grillot@fdn.fr
+homepage=https://github.com/JulesGrillot/plugin_inaturalist_extractor/
+repository=https://github.com/JulesGrillot/plugin_inaturalist_extractor/
+tracker=https://github.com/JulesGrillot/plugin_inaturalist_extractor//issues/
+
+# experimental flag
+deprecated=False
+experimental=True
+qgisMinimumVersion=3.28
+qgisMaximumVersion=3.99
+
+# versioning
+version=0.1.0
+changelog=
