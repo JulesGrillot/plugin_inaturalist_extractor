@@ -251,80 +251,97 @@ class InaturalistExtractorPlugin:
         # Show the dialog back for the ProgressBar
         self.dlg.activate_window()
 
-        # Creation of the folder name
-        today = datetime.datetime.now()
-        year = today.year
-        month = today.strftime("%m")
-        day = today.strftime("%d")
-        hour = today.strftime("%H")
-        minute = today.strftime("%M")
-        folder = (
-            "iNaturalistExport_"
-            + str(year)
-            + str(month)
-            + str(day)
-            + "_"
-            + str(hour)
-            + str(minute)
-        )
-        if self.dlg.save_result_checkbox.isChecked():
-            # Creation of the folder
-            path = self.dlg.line_edit_output_folder.text() + "/" + str(folder)
-            if not os.path.exists(path):
-                os.makedirs(path)
-        else:
-            path = None
-
-        # Creation of a group of layers to store the results of the request
-        if self.dlg.add_to_project_checkbox.isChecked():
-            self.project.instance().layerTreeRoot().insertGroup(0, folder)
-            self.group = self.project.instance().layerTreeRoot().findGroup(folder)
-
-        geom_type = "Point"
-        self.new_layer = QgsVectorLayer(
-            geom_type + "?crs=epsg:4326", "iNaturalist", "memory"
-        )
-        self.new_layer.startEditing()
-        self.new_layer.addAttribute(QgsField("id", QVariant.Int, "integer", 10))
-        self.new_layer.addAttribute(
-            QgsField("iconic_taxon_name", QVariant.Int, "integer", 10)
-        )
-        self.new_layer.addAttribute(QgsField("taxon_id", QVariant.Int, "integer", 10))
-        self.new_layer.addAttribute(QgsField("rank", QVariant.String, "string", 254))
-        self.new_layer.addAttribute(QgsField("name", QVariant.String, "string", 254))
-        self.new_layer.addAttribute(QgsField("obs", QVariant.String, "string", 254))
-        self.new_layer.addAttribute(QgsField("date", QVariant.String, "string", 254))
-        self.new_layer.addAttribute(QgsField("quality", QVariant.String, "string", 254))
-        self.new_layer.addAttribute(QgsField("url", QVariant.String, "string", 254))
-        self.new_layer.addAttribute(
-            QgsField("taxon_url", QVariant.String, "string", 254)
-        )
-        self.new_layer.commitChanges()
-        self.new_layer.triggerRepaint()
-
-        self.import_data = ImportData(
-            self.manager,
-            self.project,
-            self.new_layer,
-            self.dlg.extent,
-            self.dlg,
-            self.url,
-        )
-
         get_max_obs = MaxObs(
             self.manager,
-            self.project,
-            self.new_layer,
             self.dlg.extent,
-            self.dlg,
             self.url,
         )
 
         get_max_obs.finished_dl.connect(lambda: self.start_data_import(get_max_obs))
 
     def start_data_import(self, sender):
-        self.import_data.download(sender.nb_obs)
-        self.import_data.finished_dl.connect(self.finished_import)
+        print(sender.nb_obs)
+        if sender.nb_obs > 0:
+            # Creation of the folder name
+            today = datetime.datetime.now()
+            year = today.year
+            month = today.strftime("%m")
+            day = today.strftime("%d")
+            hour = today.strftime("%H")
+            minute = today.strftime("%M")
+            folder = (
+                "iNaturalistExport_"
+                + str(year)
+                + str(month)
+                + str(day)
+                + "_"
+                + str(hour)
+                + str(minute)
+            )
+            if self.dlg.save_result_checkbox.isChecked():
+                # Creation of the folder
+                path = self.dlg.line_edit_output_folder.text() + "/" + str(folder)
+                if not os.path.exists(path):
+                    os.makedirs(path)
+            else:
+                path = None
+            # Creation of a group of layers to store the results of the request
+            if self.dlg.add_to_project_checkbox.isChecked():
+                self.project.instance().layerTreeRoot().insertGroup(0, folder)
+                self.group = self.project.instance().layerTreeRoot().findGroup(folder)
+
+            geom_type = "Point"
+            self.new_layer = QgsVectorLayer(
+                geom_type + "?crs=epsg:4326", "iNaturalist", "memory"
+            )
+            self.new_layer.startEditing()
+            self.new_layer.addAttribute(QgsField("id", QVariant.Int, "integer", 10))
+            self.new_layer.addAttribute(
+                QgsField("iconic_taxon_name", QVariant.Int, "integer", 10)
+            )
+            self.new_layer.addAttribute(
+                QgsField("taxon_id", QVariant.Int, "integer", 10)
+            )
+            self.new_layer.addAttribute(
+                QgsField("rank", QVariant.String, "string", 254)
+            )
+            self.new_layer.addAttribute(
+                QgsField("name", QVariant.String, "string", 254)
+            )
+            self.new_layer.addAttribute(QgsField("obs", QVariant.String, "string", 254))
+            self.new_layer.addAttribute(
+                QgsField("date", QVariant.String, "string", 254)
+            )
+            self.new_layer.addAttribute(
+                QgsField("quality", QVariant.String, "string", 254)
+            )
+            self.new_layer.addAttribute(QgsField("url", QVariant.String, "string", 254))
+            self.new_layer.addAttribute(
+                QgsField("taxon_url", QVariant.String, "string", 254)
+            )
+            self.new_layer.commitChanges()
+            self.new_layer.triggerRepaint()
+
+            self.import_data = ImportData(
+                self.manager,
+                self.project,
+                self.new_layer,
+                self.dlg.extent,
+                self.dlg,
+                self.url,
+            )
+
+            self.import_data.download(sender.nb_obs)
+            self.import_data.finished_dl.connect(self.finished_import)
+        else:
+            # If there is no observation in the extent.
+            msg = QMessageBox()
+            msg.critical(
+                None,
+                self.tr("Error"),
+                self.tr("No Observation in the selected extent."),
+            )
+            # TO DO CLOSE DIALOG AND RELAUNCH PLUGIN
 
     def finished_import(self):
         # If a layer is created and needs to be added to the project

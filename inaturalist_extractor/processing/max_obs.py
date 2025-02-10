@@ -14,22 +14,16 @@ class MaxObs(QObject):
     def __init__(
         self,
         network_manager=None,
-        project=None,
-        layer=None,
         extent=None,
-        dlg=None,
         url=None,
     ):
         super().__init__()
+        self.network_manager = network_manager
+        self.extent = extent
         self.url = url
 
         self._pending_downloads = 0
         self.nb_obs = 0
-        self.network_manager = network_manager
-        self.project = project
-        self.layer = layer
-        self.extent = extent
-        self.dlg = dlg
 
         self.download()
 
