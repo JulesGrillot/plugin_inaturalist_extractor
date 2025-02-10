@@ -63,7 +63,9 @@ __plugin_md__: dict = plugin_metadata_as_dict()
 __author__: str = __plugin_md__.get("general").get("author")
 __copyright__: str = "2025 - {0}, {1}".format(date.today().year, __author__)
 __email__: str = __plugin_md__.get("general").get("email")
-__icon_path__: Path = DIR_PLUGIN_ROOT.resolve() / __plugin_md__.get("general").get("icon")
+__icon_path__: Path = DIR_PLUGIN_ROOT.resolve() / __plugin_md__.get("general").get(
+    "icon"
+)
 __keywords__: list = [
     t.strip() for t in __plugin_md__.get("general").get("repository").split("tags")
 ]
@@ -73,7 +75,7 @@ __summary__: str = "{}\n{}".format(
     __plugin_md__.get("general").get("about"),
 )
 
-__title__: str = __plugin_md__.get("general").get("name")
+__title__: str = __plugin_md__.get("service").get("plugin_name")
 __title_clean__: str = "".join(e for e in __title__ if e.isalnum())
 
 __uri_homepage__: str = __plugin_md__.get("general").get("homepage")
@@ -87,6 +89,15 @@ __version_info__: tuple = tuple(
         int(num) if num.isdigit() else num
         for num in __version__.replace("-", ".", 1).split(".")
     ]
+)
+
+__service_name__: str = __plugin_md__.get("service").get("name")
+__service_uri__: str = __plugin_md__.get("service").get("uri")
+__service_crs__: str = __plugin_md__.get("service").get("crs")
+__service_metadata__: str = __plugin_md__.get("service").get("metadata")
+__service_credit__: str = __plugin_md__.get("service").get("producer")
+__service_logo__: Path = DIR_PLUGIN_ROOT.resolve() / __plugin_md__.get("service").get(
+    "logo"
 )
 
 # #############################################################################

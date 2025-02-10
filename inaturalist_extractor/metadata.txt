@@ -23,3 +23,12 @@ qgisMaximumVersion=3.99
 # versioning
 version=0.1.0
 changelog=
+
+[service]
+plugin_name=iNaturalist_Extractor
+name=iNaturalist
+uri=https://api.inaturalist.org/v1/observations
+crs=4326
+metadata=https://www.inaturalist.org/pages/about
+producer=https://www.inaturalist.org
+logo=resources/images/logo.png
