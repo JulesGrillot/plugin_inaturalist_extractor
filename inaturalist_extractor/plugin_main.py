@@ -341,7 +341,6 @@ class InaturalistExtractorPlugin:
             self.dlg.close()
             self.pluginIsActive = False
             self.handle_finished()
-            # TO DO CLOSE DIALOG AND RELAUNCH PLUGIN
 
     def finished_import(self):
         # If a layer is created and needs to be added to the project
