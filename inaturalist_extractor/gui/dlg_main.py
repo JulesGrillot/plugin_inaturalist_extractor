@@ -422,7 +422,7 @@ class InaturalistExtractorDialog(QDialog):
             self.erase_rubber_band()
 
     def pointer(self):
-        # Add the tool to draw a rectangle
+        # Add the tool to draw a rectangle.
         self.showMinimized()
         self.iface.mainWindow().activateWindow()
         self.canvas.setMapTool(self.rectangle_tool)
