@@ -59,7 +59,6 @@ class InaturalistExtractorDialog(QDialog):
         iface: An interface instance that will be passed to this class which \
         provides the hook by which you can manipulate the QGIS application \
         at run time.
-        url: The wfs url
         """
         super(InaturalistExtractorDialog, self).__init__()
         self.setObjectName("{} Extractor".format(__service_name__))
@@ -302,7 +301,7 @@ class InaturalistExtractorDialog(QDialog):
 
     def set_rectangle_tool(self):
         self.rectangle_tool = RectangleDrawTool(self.project, self.canvas)
-        self.rectangle_tool.signal.connect(self.activate_window)
+        self.rectangle_tool.signal.connect(self.rectangle_drawned)
         self.draw_rectangle_button.setEnabled(True)
 
     def check_layer_size(self):
@@ -428,11 +427,14 @@ class InaturalistExtractorDialog(QDialog):
         self.iface.mainWindow().activateWindow()
         self.canvas.setMapTool(self.rectangle_tool)
 
+    def rectangle_drawned(self):
+        self.rectangle = True
+        self.activate_window()
+
     def activate_window(self):
         # Put the dialog on top once the rectangle is drawn
         self.showNormal()
         self.activateWindow()
-        self.rectangle = True
         self.check_path()
 
 

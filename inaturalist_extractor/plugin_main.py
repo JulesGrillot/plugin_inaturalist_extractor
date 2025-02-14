@@ -248,9 +248,6 @@ class InaturalistExtractorPlugin:
         the QGIS project
 
         """
-        # Show the dialog back for the ProgressBar
-        self.dlg.activate_window()
-
         get_max_obs = MaxObs(
             self.manager,
             self.dlg.extent,
@@ -297,7 +294,7 @@ class InaturalistExtractorPlugin:
             self.new_layer.startEditing()
             self.new_layer.addAttribute(QgsField("id", QVariant.Int, "integer", 10))
             self.new_layer.addAttribute(
-                QgsField("iconic_taxon_name", QVariant.Int, "integer", 10)
+                QgsField("iconic_taxon_name", QVariant.String, "string", 10)
             )
             self.new_layer.addAttribute(
                 QgsField("taxon_id", QVariant.Int, "integer", 10)
@@ -341,6 +338,9 @@ class InaturalistExtractorPlugin:
                 self.tr("Error"),
                 self.tr("No Observation in the selected extent."),
             )
+            self.dlg.close()
+            self.pluginIsActive = False
+            self.handle_finished()
             # TO DO CLOSE DIALOG AND RELAUNCH PLUGIN
 
     def finished_import(self):

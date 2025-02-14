@@ -6,79 +6,78 @@
     <message>
         <location filename="../../gui/dlg_main.py" line="84"/>
         <source>Data provided by :</source>
-        <translation>Données fournies par :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="100"/>
         <source>Documentation</source>
-        <translation>Documentation</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="107"/>
         <source>Metadata</source>
-        <translation>Métadonnées</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="118"/>
         <source>Draw an extent to extract data :</source>
-        <translation>Tracer une emprise pour extraire les données :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="130"/>
         <source>Draw an extent</source>
-        <translation>Tracer une emprise</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="138"/>
         <source>Use layer extent to extract data :</source>
-        <translation>Utiliser l'emprise d'une couche pour l'extraction :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="166"/>
         <source>Select outputs&apos;
 coordinate system :</source>
-        <translation>Sélectionner la projection
-en sortie :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="176"/>
         <source>Save the results :</source>
-        <translation>Sauvergarder les résultats :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="181"/>
         <source>Add exported data to the project</source>
-        <translation>Ajouter les données exportées au projet</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="215"/>
         <source>Explore folders :</source>
-        <translation>Parcourir les dossiers :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="233"/>
         <source>Ok</source>
-        <translation>Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="234"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="319"/>
         <source>Warning</source>
-        <translation>Attention</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="319"/>
         <source>Selected layer is very large (degraded performance)</source>
-        <translation>La couche sélectionnée est très grande (performances dégradées)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="364"/>
         <source>Select an output folder</source>
-        <translation>Sélectionner un dossier de sortie</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -86,27 +85,27 @@ en sortie :</translation>
     <message>
         <location filename="../../plugin_main.py" line="96"/>
         <source>{} Extractor</source>
-        <translation>{} Extractor</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../plugin_main.py" line="103"/>
         <source>Help</source>
-        <translation>Aide</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../plugin_main.py" line="112"/>
         <source>Settings</source>
-        <translation>Paramètres</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../plugin_main.py" line="336"/>
         <source>Error</source>
-        <translation>Erreur</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../plugin_main.py" line="336"/>
         <source>No Observation in the selected extent.</source>
-        <translation>PAs d'observations dans l'emprise sélectionnée.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -114,17 +113,17 @@ en sortie :</translation>
     <message>
         <location filename="../../plugin_main.py" line="435"/>
         <source>Error</source>
-        <translation>Erreur</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../plugin_main.py" line="423"/>
         <source>Github is down.</source>
-        <translation>Les services sont Github sont hors-ligne.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../plugin_main.py" line="429"/>
         <source>You are not connected to the Internet.</source>
-        <translation>Vous n'êtes pas connecté à internet.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../plugin_main.py" line="435"/>
@@ -132,10 +131,7 @@ en sortie :</translation>
 Go to
 {tracker}
 to report the issue.</source>
-        <translation>Code erreur : {code}
-Rendez-vous sur
-{tracker}
-pour remonter le problème.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -143,12 +139,12 @@ pour remonter le problème.</translation>
     <message>
         <location filename="../../processing/rectangle_tool.py" line="125"/>
         <source>Warning</source>
-        <translation>Attention</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../processing/rectangle_tool.py" line="125"/>
         <source>Drawned rectangle is very large (degraded performances)</source>
-        <translation>Le rectangle tracé est très grand (performances dégradées)</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -156,7 +152,7 @@ pour remonter le problème.</translation>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="14"/>
         <source>iNaturalist Extractor - Settings</source>
-        <translation>iNaturalist Extractor - Paramètres</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="44"/>
@@ -166,37 +162,37 @@ pour remonter le problème.</translation>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="75"/>
         <source>Miscellaneous</source>
-        <translation>Divers</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="124"/>
         <source>Report an issue</source>
-        <translation>Remonter un problème</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="146"/>
         <source>Version used to save settings:</source>
-        <translation>Version utilisée pour sauvegarder les paramètres:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="168"/>
         <source>Help</source>
-        <translation>Aide</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="190"/>
         <source>Reset setttings to factory defaults</source>
-        <translation>Restaurer les paramètres par défaut</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="209"/>
         <source>Enable debug mode.</source>
-        <translation>Activer le mode débogage.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../gui/dlg_settings.ui" line="218"/>
         <source>Debug mode (degraded performances)</source>
-        <translation>Mode débogage (performances dégrédées)</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
