@@ -5,6 +5,8 @@ import json
 from qgis.PyQt.QtCore import QObject, QUrl, pyqtSignal
 from qgis.PyQt.QtNetwork import QNetworkReply, QNetworkRequest
 
+from inaturalist_extractor.__about__ import __plugin_name__, __version__
+
 
 class MaxObs(QObject):
     finished_dl = pyqtSignal()
@@ -41,6 +43,9 @@ class MaxObs(QObject):
         )
         url = QUrl(url)
         request = QNetworkRequest(url)
+        request.setRawHeader(
+            b"User-Agent", bytes(__plugin_name__ + "/" + __version__, encoding="utf-8")
+        )
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
         reply = self.network_manager.get(request)
         reply.finished.connect(lambda: self.handle_finished(reply))

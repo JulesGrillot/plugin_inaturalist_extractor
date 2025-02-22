@@ -7,6 +7,12 @@ from qgis.core import QgsFeature, QgsGeometry, QgsPointXY
 from qgis.PyQt.QtCore import QObject, QUrl, pyqtSignal
 from qgis.PyQt.QtNetwork import QNetworkReply, QNetworkRequest
 
+from inaturalist_extractor.__about__ import (
+    __per_page_limit__,
+    __plugin_name__,
+    __version__,
+)
+
 
 class ImportData(QObject):
     finished_dl = pyqtSignal()
@@ -40,8 +46,8 @@ class ImportData(QObject):
 
         self.new_features = []
 
-        # Obs limit by pages, default is 24
-        self.limit = 24
+        # Max observations and obs py page limit variables
+        self.limit = None
         self.max_obs = None
         self.total_pages = 0
 
@@ -60,6 +66,11 @@ class ImportData(QObject):
     def download(self, max_obs):
         if not self.max_obs:
             self.max_obs = max_obs
+            # Adapt per_page results based on api recommandations
+            if self.max_obs > int(__per_page_limit__):
+                self.limit = int(__per_page_limit__)
+            else:
+                self.limit = self.max_obs
             # Laucnch The progress bar
             self.total_pages = int(self.max_obs / self.limit) + 1
             self.dlg.thread.set_max(self.total_pages)
@@ -79,6 +90,9 @@ class ImportData(QObject):
         )
         url = QUrl(url)
         request = QNetworkRequest(url)
+        request.setRawHeader(
+            b"User-Agent", bytes(__plugin_name__ + "/" + __version__, encoding="utf-8")
+        )
         request.setHeader(QNetworkRequest.ContentTypeHeader, "application/json")
         # GET Request
         reply = self.network_manager.get(request)
@@ -86,8 +100,7 @@ class ImportData(QObject):
         reply.finished.connect(lambda: self.handle_finished(reply))
         self._pending_downloads += 1
 
-    def handle_finished(self, reply):  # noqa: C901
-        # TO DO improve this function
+    def handle_finished(self, reply):
         self._pending_downloads -= 1
         if reply.error() != QNetworkReply.NoError:
             print(f"code: {reply.error()} message: {reply.errorString()}")
@@ -97,52 +110,7 @@ class ImportData(QObject):
             data_request = reply.readAll().data().decode()
             if self.pending_downloads == 0:
                 res = json.loads(data_request)
-                # add a feature in the layer for every observation
-                for obs in res["results"]:
-                    # Create feature
-                    new_feature = QgsFeature(self.layer.fields())
-                    # Add a geometry
-                    new_geom = QgsGeometry.fromPointXY(
-                        QgsPointXY(
-                            obs["geojson"]["coordinates"][0],
-                            obs["geojson"]["coordinates"][1],
-                        )
-                    )
-                    new_feature.setGeometry(new_geom)
-                    # Complete feature field one by one
-                    field_index = 0
-                    new_feature.setAttribute(field_index, obs["id"])
-                    field_index += 1
-                    new_feature.setAttribute(
-                        field_index, obs["taxon"]["iconic_taxon_name"]
-                    )
-                    field_index += 1
-                    new_feature.setAttribute(
-                        field_index, obs["taxon"]["min_species_taxon_id"]
-                    )
-                    field_index += 1
-                    new_feature.setAttribute(field_index, obs["taxon"]["rank"])
-                    field_index += 1
-                    new_feature.setAttribute(field_index, obs["taxon"]["name"])
-                    field_index += 1
-                    new_feature.setAttribute(field_index, obs["user"]["name"])
-                    field_index += 1
-                    new_feature.setAttribute(field_index, obs["time_observed_at"])
-                    field_index += 1
-                    new_feature.setAttribute(field_index, obs["quality_grade"])
-                    field_index += 1
-                    new_feature.setAttribute(field_index, obs["uri"])
-                    field_index += 1
-                    new_feature.setAttribute(
-                        field_index,
-                        "https://www.inaturalist.org/taxa/{taxon_id}".format(
-                            taxon_id=obs["taxon"]["min_species_taxon_id"]
-                        ),
-                    )
-
-                    # Add the feature to the layer.
-                    self.new_features.append(new_feature)
-
+                self.specific_api_operation(res)
                 # While the actual page number is lower than the total number, update
                 # progress bar and download a new page
                 if self.pending_pages < self.total_pages + 1:
@@ -176,3 +144,46 @@ class ImportData(QObject):
                     self.layer.triggerRepaint()
                     # Emit signal when finished
                     self.finished_dl.emit()
+
+    def specific_api_operation(self, request_result):
+        # add a feature in the layer for every observation
+        for obs in request_result["results"]:
+            # Create feature
+            new_feature = QgsFeature(self.layer.fields())
+            # Add a geometry
+            new_geom = QgsGeometry.fromPointXY(
+                QgsPointXY(
+                    obs["geojson"]["coordinates"][0],
+                    obs["geojson"]["coordinates"][1],
+                )
+            )
+            new_feature.setGeometry(new_geom)
+            # Complete feature field one by one
+            field_index = 0
+            new_feature.setAttribute(field_index, obs["id"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["taxon"]["iconic_taxon_name"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["taxon"]["min_species_taxon_id"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["taxon"]["rank"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["taxon"]["name"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["user"]["name"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["time_observed_at"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["quality_grade"])
+            field_index += 1
+            new_feature.setAttribute(field_index, obs["uri"])
+            field_index += 1
+            new_feature.setAttribute(
+                field_index,
+                "https://www.inaturalist.org/taxa/{taxon_id}".format(
+                    taxon_id=obs["taxon"]["min_species_taxon_id"]
+                ),
+            )
+
+            # Add the feature to the layer.
+            self.new_features.append(new_feature)
