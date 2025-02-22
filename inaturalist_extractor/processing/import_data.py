@@ -76,7 +76,6 @@ class ImportData(QObject):
                 self.total_pages = int(self.max_obs / self.limit)
             else:
                 self.total_pages = int(self.max_obs / self.limit) + 1
-            print(self.total_pages)
             self.dlg.thread.set_max(self.total_pages)
             self.dlg.thread.add_one(0)
             self.dlg.select_progress_bar_label.setText(

@@ -257,7 +257,6 @@ class InaturalistExtractorPlugin:
         get_max_obs.finished_dl.connect(lambda: self.start_data_import(get_max_obs))
 
     def start_data_import(self, sender):
-        print(sender.nb_obs)
         if sender.nb_obs > 0:
             # Creation of the folder name
             today = datetime.datetime.now()
