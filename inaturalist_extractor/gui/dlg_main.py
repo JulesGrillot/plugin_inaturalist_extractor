@@ -37,6 +37,7 @@ from qgis.PyQt.QtWidgets import (
 
 # project
 from inaturalist_extractor.__about__ import (
+    __obs_limit__,
     __service_credit__,
     __service_crs__,
     __service_logo__,
@@ -44,7 +45,7 @@ from inaturalist_extractor.__about__ import (
     __service_name__,
     __uri_homepage__,
 )
-from inaturalist_extractor.processing import RectangleDrawTool
+from inaturalist_extractor.processing import MaxObs, RectangleDrawTool
 
 # ############################################################################
 # ########## Classes ###############
@@ -52,7 +53,7 @@ from inaturalist_extractor.processing import RectangleDrawTool
 
 
 class InaturalistExtractorDialog(QDialog):
-    def __init__(self, project=None, iface=None, manager=None):
+    def __init__(self, project=None, iface=None, manager=None, url=None):
         """Constructor.
         :param
         project: The current QGIS project instance
@@ -66,10 +67,12 @@ class InaturalistExtractorDialog(QDialog):
         self.iface = iface
         self.project = project
         self.manager = manager
+        self.url = url
         self.canvas = self.iface.mapCanvas()
 
         self.layer = None
         self.rectangle = None
+        self.nb_obs = 0
 
         self.setWindowTitle("{} Extractor".format(__service_name__))
 
@@ -78,12 +81,27 @@ class InaturalistExtractorDialog(QDialog):
         extent_check_group.setExclusive(True)
         layout_row_count = 0
 
+        # Warning on plugin use
+        warning_label = QLabel(self)
+        warning_label.setText(
+            self.tr(
+                'This plugin is not meant for data scrapping as specified in the <a href="https://www.inaturalist.org/pages/api+recommended+practices">API Recommanded practices</a>:<p>The API is meant to be used for building applications and for fetching small to medium<p>batches of data. It is not meant to be a way to download data in bulk'  # noqa: E501
+            )
+        )
+        warning_label.setOpenExternalLinks(True)
+        warning_label.setStyleSheet(
+            "border: 1px solid; border-color:red; font-weight:bold"
+        )
+        self.layout.addWidget(warning_label)
+
+        self.layout.insertSpacing(100, 25)
+
         # Source and credit
-        self.source_doc_layout = QGridLayout()
         credit_label = QLabel(self)
         credit_label.setText(self.tr("Data provided by :"))
         self.layout.addWidget(credit_label)
 
+        self.source_doc_layout = QGridLayout()
         pixmap = QPixmap(str(__service_logo__))
         self.producer_label = QToolButton(self)
         self.producer_label.setObjectName(__service_credit__)
@@ -314,15 +332,12 @@ class InaturalistExtractorDialog(QDialog):
                 layer.crs(),
                 QgsCoordinateReferenceSystem("EPSG:" + str(__service_crs__)),
             )
-            if transformed_extent.area() > 100000000:
-                msg = QMessageBox()
-                msg.warning(
-                    None,
-                    self.tr("Warning"),
-                    self.tr("Selected layer is very large (degraded performance)"),
-                )
-            else:
-                pass
+            get_max_obs = MaxObs(
+                self.manager,
+                transformed_extent,
+                self.url,
+            )
+            get_max_obs.finished_dl.connect(lambda: self.update_nb_obs(get_max_obs))
 
     def get_result(self):
         # Accepted result from the dialog
@@ -374,14 +389,24 @@ class InaturalistExtractorDialog(QDialog):
         # Check if different conditions are True to enable the OK button.
         # Check if there is a rectangle
         if self.rectangle:
-            # If the result must be saved the output directory must exists.
-            if self.save_result_checkbox.isChecked():
-                if os.path.exists(self.line_edit_output_folder.text()):
-                    self.button_box.setEnabled(True)
+            # Check if max obs number is reached
+            if self.nb_obs <= int(__obs_limit__):
+                # If the result must be saved the output directory must exists.
+                if self.save_result_checkbox.isChecked():
+                    if os.path.exists(self.line_edit_output_folder.text()):
+                        self.button_box.setEnabled(True)
+                    else:
+                        self.button_box.setEnabled(False)
                 else:
-                    self.button_box.setEnabled(False)
+                    self.button_box.setEnabled(True)
             else:
-                self.button_box.setEnabled(True)
+                msg = QMessageBox()
+                msg.warning(
+                    None,
+                    self.tr("Warning"),
+                    self.tr("Max Observation count is reached, select a smaller area."),
+                )
+                self.button_box.setEnabled(False)
         else:
             self.button_box.setEnabled(False)
         # If the result is saved as a temporary output,
@@ -429,6 +454,15 @@ class InaturalistExtractorDialog(QDialog):
 
     def rectangle_drawned(self):
         self.rectangle = True
+        get_max_obs = MaxObs(
+            self.manager,
+            self.rectangle_tool.new_extent,
+            self.url,
+        )
+        get_max_obs.finished_dl.connect(lambda: self.update_nb_obs(get_max_obs))
+
+    def update_nb_obs(self, sender):
+        self.nb_obs = sender.nb_obs
         self.activate_window()
 
     def activate_window(self):

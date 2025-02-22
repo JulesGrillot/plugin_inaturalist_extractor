@@ -214,7 +214,7 @@ class InaturalistExtractorPlugin:
             self.pluginIsActive = True
             # Open Dialog
             self.dlg = InaturalistExtractorDialog(
-                self.project, self.iface, self.manager
+                self.project, self.iface, self.manager, self.url
             )
             self.dlg.activate_window()
             # If there is no layers, an OSM layer is added
@@ -294,7 +294,7 @@ class InaturalistExtractorPlugin:
             self.new_layer.startEditing()
             self.new_layer.addAttribute(QgsField("id", QVariant.Int, "integer", 10))
             self.new_layer.addAttribute(
-                QgsField("iconic_taxon_name", QVariant.String, "string", 10)
+                QgsField("iconic_taxon_name", QVariant.String, "string", 254)
             )
             self.new_layer.addAttribute(
                 QgsField("taxon_id", QVariant.Int, "integer", 10)

@@ -34,7 +34,7 @@ class MaxObs(QObject):
         return self._pending_downloads
 
     def download(self):
-        url = "{url}/species_counts?verifiable=true&spam=false&swlng={xmin}&swlat={ymin}&nelng={xmax}&nelat={ymax}&locale=fr".format(  # noqa: E501
+        url = "{url}/?verifiable=true&spam=false&swlng={xmin}&swlat={ymin}&nelng={xmax}&nelat={ymax}&locale=fr&per_page=1".format(  # noqa: E501
             url=self.url,
             xmin=self.extent.xMinimum(),
             ymin=self.extent.yMinimum(),

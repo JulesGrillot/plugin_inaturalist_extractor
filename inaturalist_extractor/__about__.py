@@ -97,6 +97,7 @@ __service_crs__: str = __plugin_md__.get("service").get("crs")
 __service_metadata__: str = __plugin_md__.get("service").get("metadata")
 __service_credit__: str = __plugin_md__.get("service").get("producer")
 __per_page_limit__: str = __plugin_md__.get("service").get("per_page_limit")
+__obs_limit__: str = __plugin_md__.get("service").get("obs_limit")
 __service_logo__: Path = DIR_PLUGIN_ROOT.resolve() / __plugin_md__.get("service").get(
     "logo"
 )
