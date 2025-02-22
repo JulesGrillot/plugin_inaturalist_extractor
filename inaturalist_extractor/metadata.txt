@@ -23,7 +23,7 @@ qgisMaximumVersion=3.99
 # versioning
 version=0.2.0
 changelog=
-    0.2.0 add API recommandations, warning on usage, User-Agent, per_page limit, forbid user to dl more than 10k data
+    0.2.0 add API recommandations, warning on usage, User-Agent, per_page limit, forbid user to dl more than 10k data, correct layer export and crs
 
 [service]
 plugin_name=iNaturalist_Extractor

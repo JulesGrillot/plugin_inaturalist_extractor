@@ -166,7 +166,7 @@ class InaturalistExtractorDialog(QDialog):
         self.select_layer_combo_box.setFilters(
             QgsMapLayerProxyModel.PolygonLayer
             | QgsMapLayerProxyModel.LineLayer
-            | QgsMapLayerProxyModel.RasterLayer
+            | QgsMapLayerProxyModel.PointLayer
         )
         self.select_layer_combo_box.layerChanged.connect(self.check_layer_size)
         self.select_layer_combo_box.setEnabled(False)

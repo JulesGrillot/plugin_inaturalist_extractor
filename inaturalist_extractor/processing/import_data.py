@@ -1,7 +1,14 @@
 # Import basic libs
 import json
 
-from qgis.core import NULL, QgsFeature, QgsGeometry, QgsPointXY
+from qgis.core import (
+    NULL,
+    QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform,
+    QgsFeature,
+    QgsGeometry,
+    QgsPointXY,
+)
 
 # Import PyQt libs
 from qgis.PyQt.QtCore import QObject, QUrl, pyqtSignal
@@ -10,6 +17,7 @@ from qgis.PyQt.QtNetwork import QNetworkReply, QNetworkRequest
 from inaturalist_extractor.__about__ import (
     __per_page_limit__,
     __plugin_name__,
+    __service_crs__,
     __version__,
 )
 
@@ -160,6 +168,14 @@ class ImportData(QObject):
                 QgsPointXY(
                     obs["geojson"]["coordinates"][0],
                     obs["geojson"]["coordinates"][1],
+                )
+            )
+            # Function used to reproject a geometry
+            new_geom.transform(
+                QgsCoordinateTransform(
+                    QgsCoordinateReferenceSystem(int(__service_crs__)),
+                    self.dlg.crs_selector.crs(),
+                    self.project,
                 )
             )
             new_feature.setGeometry(new_geom)

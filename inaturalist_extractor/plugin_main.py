@@ -12,7 +12,17 @@ from functools import partial
 from pathlib import Path
 
 # PyQGIS
-from qgis.core import QgsApplication, QgsField, QgsProject, QgsSettings, QgsVectorLayer
+from qgis.core import (
+    Qgis,
+    QgsApplication,
+    QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform,
+    QgsField,
+    QgsProject,
+    QgsSettings,
+    QgsVectorFileWriter,
+    QgsVectorLayer,
+)
 from qgis.gui import QgisInterface
 from qgis.PyQt.QtCore import (
     QCoreApplication,
@@ -31,6 +41,7 @@ from qgis.PyQt.QtWidgets import QAction, QMessageBox
 from inaturalist_extractor.__about__ import (
     DIR_PLUGIN_ROOT,
     __icon_path__,
+    __service_crs__,
     __service_name__,
     __service_uri__,
     __title__,
@@ -276,11 +287,11 @@ class InaturalistExtractorPlugin:
             )
             if self.dlg.save_result_checkbox.isChecked():
                 # Creation of the folder
-                path = self.dlg.line_edit_output_folder.text() + "/" + str(folder)
-                if not os.path.exists(path):
-                    os.makedirs(path)
+                self.path = self.dlg.line_edit_output_folder.text() + "/" + str(folder)
+                if not os.path.exists(self.path):
+                    os.makedirs(self.path)
             else:
-                path = None
+                self.path = None
             # Creation of a group of layers to store the results of the request
             if self.dlg.add_to_project_checkbox.isChecked():
                 self.project.instance().layerTreeRoot().insertGroup(0, folder)
@@ -288,7 +299,9 @@ class InaturalistExtractorPlugin:
 
             geom_type = "Point"
             self.new_layer = QgsVectorLayer(
-                geom_type + "?crs=epsg:4326", "iNaturalist", "memory"
+                geom_type + "?crs=" + self.dlg.crs_selector.crs().authid(),
+                "iNaturalist",
+                "memory",
             )
             self.new_layer.startEditing()
             self.new_layer.addAttribute(QgsField("id", QVariant.Int, "integer", 10))
@@ -366,18 +379,56 @@ class InaturalistExtractorPlugin:
             # If a layer as been saved, the GPKG is opened and every layer are
             # added to the project
             if self.new_layer.featureCount() > 0:
-                gpkg = QgsVectorLayer(self.new_layer, "", "ogr")
+                context = self.project.instance().transformContext()
+                options = QgsVectorFileWriter.SaveVectorOptions()
+                tr = QgsCoordinateTransform(
+                    QgsCoordinateReferenceSystem("EPSG:" + str(__service_crs__)),
+                    self.dlg.crs_selector.crs(),
+                    self.project.instance(),
+                )
+                options.ct = tr
+                options.layerName = "iNaturalistExport"
+                options.fileEncoding = self.new_layer.dataProvider().encoding()
+                # Specific procedure if the layer must be saved as a GPKG.
+                options.driverName = "GPKG"
+                # Check if the GeoPackage already exists,
+                # to know if it's need to be created or not
+                if os.path.isfile(self.path + "/" + "inaturalist_extract.gpkg"):
+                    options.actionOnExistingFile = (
+                        QgsVectorFileWriter.CreateOrOverwriteLayer
+                    )
+
+                if Qgis.QGIS_VERSION_INT > 32000:
+                    QgsVectorFileWriter.writeAsVectorFormatV3(
+                        self.new_layer,
+                        self.path + "/" + "inaturalist_extract.gpkg",
+                        context,
+                        options,
+                    )
+                else:
+                    QgsVectorFileWriter.writeAsVectorFormatV2(
+                        self.new_layer,
+                        self.path + "/" + "inaturalist_extract.gpkg",
+                        context,
+                        options,
+                    )
+                final_layer = self.path + "/" + "inaturalist_extract.gpkg"
+                gpkg = QgsVectorLayer(
+                    final_layer,
+                    "",
+                    "ogr",
+                )
                 layers = gpkg.dataProvider().subLayers()
                 for layer in layers:
                     name = layer.split("!!::!!")[1]
                     uri = "%s|layername=%s" % (
-                        self.new_layer,
+                        final_layer,
                         name,
                     )
                     # Create layer
-                    final_layer = QgsVectorLayer(uri, name, "ogr")
-                    self.project.instance().addMapLayer(final_layer, False)
-                    self.group.addLayer(final_layer)
+                    layer = QgsVectorLayer(uri, name, "ogr")
+                    self.project.instance().addMapLayer(layer, False)
+                    self.group.addLayer(layer)
         # Once it's finished, the ProgressBar is set back to 0
         self.dlg.thread.finish()
         self.dlg.select_progress_bar_label.setText("")
