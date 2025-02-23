@@ -11,7 +11,8 @@
 ----
 
 ## What's the point
-This tool allows you to extract specific data from IGN's BD TOPO®. The extraction is based on either an extent drawned by the user on the map canvas or a layer's extent. The data is based on the WFS service published by IGN with the [Géoplateforme](https://www.ign.fr/geoplateforme).
+
+This tool allows you to extract specific data from iNaturalist database. The extraction is based on either an extent drawned by the user on the map canvas or a layer’s extent. The data is based on the API service published by iNaturalist please consider reading the [API Recommended Practices](https://www.inaturalist.org/pages/api+recommended+practices)before using the plugin.
 
 ## How to use it
 
@@ -20,7 +21,6 @@ Only 4 steps are required to use the BD TOPO® Extractor :
 1. [Select the extent you want to use to extract data.](https://julesgrillot.github.io/plugin_bd_topo_extractor/index.html#select-an-extent)
 
 1. [Select the output CRS for you exported data.](https://julesgrillot.github.io/plugin_bd_topo_extractor/index.html#select-output-crs)
-
 
 1. [Select if you want to save the result or not, and if so the output folder and output format.](https://julesgrillot.github.io/plugin_bd_topo_extractor/index.html#select-output-format)
 
