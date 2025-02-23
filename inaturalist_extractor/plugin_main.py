@@ -35,6 +35,7 @@ from inaturalist_extractor.__about__ import (
     __layer_source_name__,
     __plugin_name__,
     __service_uri__,
+    __styles_path__,
     __title__,
     __uri_homepage__,
 )
@@ -388,6 +389,11 @@ class InaturalistExtractorPlugin:
                 # differently.
                 self.project.instance().addMapLayer(self.new_layer, False)
                 self.group.addLayer(self.new_layer)
+                self.new_layer.loadNamedStyle(
+                    str(__styles_path__) + "/" + "research_style.qml"
+                )
+                self.new_layer.triggerRepaint()
+
         # Once it's finished, the ProgressBar is set back to 0
         self.dlg.thread.finish()
         self.dlg.select_progress_bar_label.setText("")
@@ -404,12 +410,35 @@ class InaturalistExtractorPlugin:
         self.new_layer.addAttribute(QgsField("taxon_id", QVariant.Int, "integer", 10))
         self.new_layer.addAttribute(QgsField("rank", QVariant.String, "string", 254))
         self.new_layer.addAttribute(QgsField("name", QVariant.String, "string", 254))
-        self.new_layer.addAttribute(QgsField("obs", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(
+            QgsField("obs_login", QVariant.String, "string", 254)
+        )
+        self.new_layer.addAttribute(
+            QgsField("obs_name", QVariant.String, "string", 254)
+        )
         self.new_layer.addAttribute(QgsField("date", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(
+            QgsField("description", QVariant.String, "string", 254)
+        )
         self.new_layer.addAttribute(QgsField("quality", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(
+            QgsField("geoprivacy", QVariant.String, "string", 254)
+        )
+        self.new_layer.addAttribute(
+            QgsField("precision", QVariant.String, "string", 254)
+        )
         self.new_layer.addAttribute(QgsField("url", QVariant.String, "string", 254))
         self.new_layer.addAttribute(
             QgsField("taxon_url", QVariant.String, "string", 254)
+        )
+        self.new_layer.addAttribute(
+            QgsField("picture1", QVariant.String, "string", 254)
+        )
+        self.new_layer.addAttribute(
+            QgsField("picture2", QVariant.String, "string", 254)
+        )
+        self.new_layer.addAttribute(
+            QgsField("picture3", QVariant.String, "string", 254)
         )
         self.new_layer.commitChanges()
         self.new_layer.triggerRepaint()

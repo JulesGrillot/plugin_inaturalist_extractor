@@ -37,3 +37,9 @@ Unreleased
 ## 0.3.1 - 2025-02-23
 
 - Make dialog appear again after launching extraction
+
+## 0.4.0 - 2025-02-23
+
+- Add fields (description, user info, precision and 3 pictures)
+- Verify that some properties exists in the result of the json, find a way to improve this part, 2 much if
+- Add style to created layer

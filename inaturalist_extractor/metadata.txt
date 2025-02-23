@@ -5,6 +5,7 @@ category=Database
 hasProcessingProvider=False
 description=Extract data from iNaturalist database drom an extent.
 icon=resources/images/default_icon.png
+style_folder=resources/styles
 tags=data, iNaturalist, environement
 
 # credits and contact
@@ -21,11 +22,12 @@ qgisMinimumVersion=3.28
 qgisMaximumVersion=3.99
 
 # versioning
-version=0.3.1
+version=0.4.0
 changelog=
     0.2.0 add API recommandations, warning on usage, User-Agent, per_page limit, forbid user to dl more than 10k data, correct layer export and crs
     0.3.0 correct geojson and shapefile export, improve code
     0.3.1 make dialog appear again after launching extraction
+    0.4.0 correct some fields error, add new fields, add style to exported layer
 
 [service]
 plugin_name=iNaturalist_Extractor

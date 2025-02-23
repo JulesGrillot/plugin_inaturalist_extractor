@@ -99,6 +99,7 @@ class ImportData(QObject):
             ymax=self.extent.yMaximum(),
             limit=self.limit,
         )
+
         url = QUrl(url)
         request = QNetworkRequest(url)
         request.setRawHeader(
@@ -184,17 +185,34 @@ class ImportData(QObject):
             field_index = 0
             new_feature.setAttribute(field_index, obs["id"])
             field_index += 1
-
-            new_feature.setAttribute(field_index, obs["taxon"]["iconic_taxon_name"])
+            if "iconic_taxon_name" in list(obs["taxon"].keys()):
+                new_feature.setAttribute(field_index, obs["taxon"]["iconic_taxon_name"])
+            else:
+                new_feature.setAttribute(field_index, NULL)
             field_index += 1
 
-            new_feature.setAttribute(field_index, obs["taxon"]["min_species_taxon_id"])
+            if "min_species_taxon_id" in list(obs["taxon"].keys()):
+                new_feature.setAttribute(
+                    field_index, obs["taxon"]["min_species_taxon_id"]
+                )
+            else:
+                new_feature.setAttribute(field_index, NULL)
             field_index += 1
 
-            new_feature.setAttribute(field_index, obs["taxon"]["rank"])
+            if "rank" in list(obs["taxon"].keys()):
+                new_feature.setAttribute(field_index, obs["taxon"]["rank"])
+            else:
+                new_feature.setAttribute(field_index, NULL)
             field_index += 1
 
-            new_feature.setAttribute(field_index, obs["taxon"]["name"])
+            if "name" in list(obs["taxon"].keys()):
+                new_feature.setAttribute(field_index, obs["taxon"]["name"])
+            else:
+                new_feature.setAttribute(field_index, NULL)
+
+            field_index += 1
+
+            new_feature.setAttribute(field_index, obs["user"]["login"])
             field_index += 1
 
             new_feature.setAttribute(field_index, obs["user"]["name"])
@@ -210,7 +228,16 @@ class ImportData(QObject):
                 new_feature.setAttribute(field_index, NULL)
             field_index += 1
 
+            new_feature.setAttribute(field_index, obs["description"])
+            field_index += 1
+
             new_feature.setAttribute(field_index, obs["quality_grade"])
+            field_index += 1
+
+            new_feature.setAttribute(field_index, obs["geoprivacy"])
+            field_index += 1
+
+            new_feature.setAttribute(field_index, obs["positional_accuracy"])
             field_index += 1
 
             new_feature.setAttribute(field_index, obs["uri"])
@@ -222,6 +249,32 @@ class ImportData(QObject):
                     taxon_id=obs["taxon"]["min_species_taxon_id"]
                 ),
             )
+            field_index += 1
+            if len(obs["observation_photos"]) > 0:
+                new_feature.setAttribute(
+                    field_index,
+                    obs["observation_photos"][0]["photo"]["url"].replace(
+                        "square.jpg", "large.jpg"
+                    ),
+                )
+                field_index += 1
+
+                if len(obs["observation_photos"]) > 1:
+                    new_feature.setAttribute(
+                        field_index,
+                        obs["observation_photos"][1]["photo"]["url"].replace(
+                            "square.jpg", "large.jpg"
+                        ),
+                    )
+                    field_index += 1
+
+                    if len(obs["observation_photos"]) > 2:
+                        new_feature.setAttribute(
+                            field_index,
+                            obs["observation_photos"][2]["photo"]["url"].replace(
+                                "square.jpg", "large.jpg"
+                            ),
+                        )
 
             # Add the feature to the list.
             self.new_features.append(new_feature)
