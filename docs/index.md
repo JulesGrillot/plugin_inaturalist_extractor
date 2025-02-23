@@ -16,13 +16,13 @@ This tool allows you to extract specific data from iNaturalist database. The ext
 
 ## How to use it
 
-Only 4 steps are required to use the BD TOPO® Extractor :
+Only 3 steps are required to use the {{ title }}:
 
-1. [Select the extent you want to use to extract data.](https://julesgrillot.github.io/plugin_bd_topo_extractor/index.html#select-an-extent)
+1. [Select the extent you want to use to extract data.](https://julesgrillot.github.io/plugin_naturalist_extractor/index.html#select-an-extent)
 
-1. [Select the output CRS for you exported data.](https://julesgrillot.github.io/plugin_bd_topo_extractor/index.html#select-output-crs)
+1. [Select the output CRS for you exported data.](https://julesgrillot.github.io/plugin_naturalist_extractor/index.html#select-output-crs)
 
-1. [Select if you want to save the result or not, and if so the output folder and output format.](https://julesgrillot.github.io/plugin_bd_topo_extractor/index.html#select-output-format)
+1. [Select if you want to save the result or not, and if so the output folder and output format.](https://julesgrillot.github.io/plugin_naturalist_extractor/index.html#select-output-format)
 
 ### User Interface
 
