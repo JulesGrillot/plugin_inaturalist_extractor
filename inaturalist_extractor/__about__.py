@@ -102,6 +102,10 @@ __service_logo__: Path = DIR_PLUGIN_ROOT.resolve() / __plugin_md__.get("service"
     "logo"
 )
 
+__layer_name__: str = __plugin_md__.get("export").get("layer_name")
+__layer_source_name__: str = __plugin_md__.get("export").get("layer_source_name")
+
+
 # #############################################################################
 # ##### Main #######################
 # ##################################

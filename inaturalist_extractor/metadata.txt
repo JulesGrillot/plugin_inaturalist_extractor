@@ -21,9 +21,10 @@ qgisMinimumVersion=3.28
 qgisMaximumVersion=3.99
 
 # versioning
-version=0.2.0
+version=0.3.0
 changelog=
     0.2.0 add API recommandations, warning on usage, User-Agent, per_page limit, forbid user to dl more than 10k data, correct layer export and crs
+    0.3.0 correct geojson and shapefile export, improve code
 
 [service]
 plugin_name=iNaturalist_Extractor
@@ -35,3 +36,7 @@ producer=https://www.inaturalist.org
 logo=resources/images/logo.png
 per_page_limit=200
 obs_limit=10000
+
+[export]
+layer_name=iNaturalist_Export
+layer_source_name=inaturalist_extract

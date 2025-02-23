@@ -15,8 +15,6 @@ from pathlib import Path
 from qgis.core import (
     Qgis,
     QgsApplication,
-    QgsCoordinateReferenceSystem,
-    QgsCoordinateTransform,
     QgsField,
     QgsProject,
     QgsSettings,
@@ -24,29 +22,21 @@ from qgis.core import (
     QgsVectorLayer,
 )
 from qgis.gui import QgisInterface
-from qgis.PyQt.QtCore import (
-    QCoreApplication,
-    QLocale,
-    QObject,
-    QTranslator,
-    QUrl,
-    QVariant,
-    pyqtSignal,
-)
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator, QUrl, QVariant
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
-from qgis.PyQt.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
+from qgis.PyQt.QtNetwork import QNetworkAccessManager
 from qgis.PyQt.QtWidgets import QAction, QMessageBox
 
 # project
 from inaturalist_extractor.__about__ import (
     DIR_PLUGIN_ROOT,
     __icon_path__,
-    __service_crs__,
-    __service_name__,
+    __layer_name__,
+    __layer_source_name__,
+    __plugin_name__,
     __service_uri__,
     __title__,
     __uri_homepage__,
-    __uri_tracker__,
 )
 from inaturalist_extractor.gui.dlg_main import InaturalistExtractorDialog
 from inaturalist_extractor.gui.dlg_settings import PlgOptionsFactory
@@ -55,7 +45,7 @@ from inaturalist_extractor.processing import (
     InaturalistExtractorProvider,
     MaxObs,
 )
-from inaturalist_extractor.toolbelt import PlgLogger
+from inaturalist_extractor.toolbelt import InternetChecker, PlgLogger
 
 # ############################################################################
 # ########## Classes ###############
@@ -106,7 +96,7 @@ class InaturalistExtractorPlugin:
         # -- Actions
         self.action_launch = QAction(
             QIcon(str(__icon_path__)),
-            self.tr("{} Extractor".format(__service_name__)),
+            self.tr("{}".format(__plugin_name__)),
             self.iface.mainWindow(),
         )
         self.iface.addToolBarIcon(self.action_launch)
@@ -132,15 +122,9 @@ class InaturalistExtractorPlugin:
         )
 
         # -- Menu
-        self.iface.addPluginToMenu(
-            "{} Extractor".format(__service_name__), self.action_launch
-        )
-        self.iface.addPluginToMenu(
-            "{} Extractor".format(__service_name__), self.action_settings
-        )
-        self.iface.addPluginToMenu(
-            "{} Extractor".format(__service_name__), self.action_help
-        )
+        self.iface.addPluginToMenu("{}".format(__plugin_name__), self.action_launch)
+        self.iface.addPluginToMenu("{}".format(__plugin_name__), self.action_settings)
+        self.iface.addPluginToMenu("{}".format(__plugin_name__), self.action_help)
 
         # -- Processing
         self.initProcessing()
@@ -151,7 +135,7 @@ class InaturalistExtractorPlugin:
         self.iface.pluginHelpMenu().addSeparator()
         self.action_help_plugin_menu_documentation = QAction(
             QIcon(str(__icon_path__)),
-            f"{__service_name__} Extractor - Documentation",
+            f"{__plugin_name__} - Documentation",
             self.iface.mainWindow(),
         )
         self.action_help_plugin_menu_documentation.triggered.connect(
@@ -180,16 +164,10 @@ class InaturalistExtractorPlugin:
     def unload(self):
         """Cleans up when plugin is disabled/uninstalled."""
         # -- Clean up menu
-        self.iface.removePluginMenu(
-            "{} Extractor".format(__service_name__), self.action_launch
-        )
+        self.iface.removePluginMenu("{}".format(__plugin_name__), self.action_launch)
         self.iface.removeToolBarIcon(self.action_launch)
-        self.iface.removePluginMenu(
-            "{} Extractor".format(__service_name__), self.action_help
-        )
-        self.iface.removePluginMenu(
-            "{} Extractor".format(__service_name__), self.action_settings
-        )
+        self.iface.removePluginMenu("{}".format(__plugin_name__), self.action_help)
+        self.iface.removePluginMenu("{}".format(__plugin_name__), self.action_settings)
 
         # -- Clean up preferences panel in QGIS settings
         self.iface.unregisterOptionsWidgetFactory(self.options_factory)
@@ -277,7 +255,8 @@ class InaturalistExtractorPlugin:
             hour = today.strftime("%H")
             minute = today.strftime("%M")
             folder = (
-                "iNaturalistExport_"
+                str(__layer_name__)
+                + "_"
                 + str(year)
                 + str(month)
                 + str(day)
@@ -300,36 +279,10 @@ class InaturalistExtractorPlugin:
             geom_type = "Point"
             self.new_layer = QgsVectorLayer(
                 geom_type + "?crs=" + self.dlg.crs_selector.crs().authid(),
-                "iNaturalist",
+                str(__layer_name__),
                 "memory",
             )
-            self.new_layer.startEditing()
-            self.new_layer.addAttribute(QgsField("id", QVariant.Int, "integer", 10))
-            self.new_layer.addAttribute(
-                QgsField("iconic_taxon_name", QVariant.String, "string", 254)
-            )
-            self.new_layer.addAttribute(
-                QgsField("taxon_id", QVariant.Int, "integer", 10)
-            )
-            self.new_layer.addAttribute(
-                QgsField("rank", QVariant.String, "string", 254)
-            )
-            self.new_layer.addAttribute(
-                QgsField("name", QVariant.String, "string", 254)
-            )
-            self.new_layer.addAttribute(QgsField("obs", QVariant.String, "string", 254))
-            self.new_layer.addAttribute(
-                QgsField("date", QVariant.String, "string", 254)
-            )
-            self.new_layer.addAttribute(
-                QgsField("quality", QVariant.String, "string", 254)
-            )
-            self.new_layer.addAttribute(QgsField("url", QVariant.String, "string", 254))
-            self.new_layer.addAttribute(
-                QgsField("taxon_url", QVariant.String, "string", 254)
-            )
-            self.new_layer.commitChanges()
-            self.new_layer.triggerRepaint()
+            self.add_field()
 
             self.import_data = ImportData(
                 self.manager,
@@ -356,79 +309,94 @@ class InaturalistExtractorPlugin:
 
     def finished_import(self):
         # If a layer is created and needs to be added to the project
-        if (
-            self.new_layer.featureCount() > 0
-            and self.dlg.add_to_project_checkbox.isChecked()
-        ):
-            # If output format is a SHP or a GEOJSON or if the
-            # layers are not saved. Saved GPKG are processed
-            # differently.
-            if (
-                self.dlg.selected_output_format() != "gpkg"
-                or self.dlg.selected_output_format() == "gpkg"
-                and not self.dlg.save_result_checkbox.isChecked()
-            ):
-                self.project.instance().addMapLayer(self.new_layer, False)
-                self.group.addLayer(self.new_layer)
-
-        # If the user wants to saved as GPKG
-        if (
-            self.dlg.selected_output_format() == "gpkg"
-            and self.dlg.save_result_checkbox.isChecked()
-        ):
-            # If a layer as been saved, the GPKG is opened and every layer are
-            # added to the project
-            if self.new_layer.featureCount() > 0:
+        if self.new_layer.featureCount() > 0:
+            # If the user wants to saved as GPKG
+            if self.dlg.save_result_checkbox.isChecked():
                 context = self.project.instance().transformContext()
                 options = QgsVectorFileWriter.SaveVectorOptions()
-                tr = QgsCoordinateTransform(
-                    QgsCoordinateReferenceSystem("EPSG:" + str(__service_crs__)),
-                    self.dlg.crs_selector.crs(),
-                    self.project.instance(),
-                )
-                options.ct = tr
-                options.layerName = "iNaturalistExport"
+                options.layerName = str(__layer_name__)
                 options.fileEncoding = self.new_layer.dataProvider().encoding()
-                # Specific procedure if the layer must be saved as a GPKG.
-                options.driverName = "GPKG"
-                # Check if the GeoPackage already exists,
-                # to know if it's need to be created or not
-                if os.path.isfile(self.path + "/" + "inaturalist_extract.gpkg"):
-                    options.actionOnExistingFile = (
-                        QgsVectorFileWriter.CreateOrOverwriteLayer
-                    )
+                if self.dlg.selected_output_format() == "gpkg":
+                    # If a layer as been saved, the GPKG is opened and every layer are
+                    # added to the project
+                    # Specific procedure if the layer must be saved as a GPKG.
+                    options.driverName = "GPKG"
+                    # Check if the GeoPackage already exists,
+                    # to know if it's need to be created or not
+                    if os.path.isfile(
+                        self.path + "/" + str(__layer_source_name__) + ".gpkg"
+                    ):
+                        options.actionOnExistingFile = (
+                            QgsVectorFileWriter.CreateOrOverwriteLayer
+                        )
 
-                if Qgis.QGIS_VERSION_INT > 32000:
-                    QgsVectorFileWriter.writeAsVectorFormatV3(
-                        self.new_layer,
-                        self.path + "/" + "inaturalist_extract.gpkg",
-                        context,
-                        options,
-                    )
-                else:
-                    QgsVectorFileWriter.writeAsVectorFormatV2(
-                        self.new_layer,
-                        self.path + "/" + "inaturalist_extract.gpkg",
-                        context,
-                        options,
-                    )
-                final_layer = self.path + "/" + "inaturalist_extract.gpkg"
-                gpkg = QgsVectorLayer(
-                    final_layer,
-                    "",
-                    "ogr",
-                )
-                layers = gpkg.dataProvider().subLayers()
-                for layer in layers:
-                    name = layer.split("!!::!!")[1]
-                    uri = "%s|layername=%s" % (
+                    if Qgis.QGIS_VERSION_INT > 32000:
+                        QgsVectorFileWriter.writeAsVectorFormatV3(
+                            self.new_layer,
+                            self.path + "/" + str(__layer_source_name__) + ".gpkg",
+                            context,
+                            options,
+                        )
+                    else:
+                        QgsVectorFileWriter.writeAsVectorFormatV2(
+                            self.new_layer,
+                            self.path + "/" + str(__layer_source_name__) + ".gpkg",
+                            context,
+                            options,
+                        )
+                    final_layer = self.path + "/" + str(__layer_source_name__) + ".gpkg"
+                    gpkg = QgsVectorLayer(
                         final_layer,
-                        name,
+                        "",
+                        "ogr",
                     )
-                    # Create layer
-                    layer = QgsVectorLayer(uri, name, "ogr")
-                    self.project.instance().addMapLayer(layer, False)
-                    self.group.addLayer(layer)
+                    layers = gpkg.dataProvider().subLayers()
+                    for layer in layers:
+                        name = layer.split("!!::!!")[1]
+                        uri = "%s|layername=%s" % (
+                            final_layer,
+                            name,
+                        )
+                        # Create layer
+                        self.new_layer = QgsVectorLayer(uri, name, "ogr")
+                else:
+                    output = (
+                        self.path
+                        + "/"
+                        + str(__layer_source_name__)
+                        + "."
+                        + self.dlg.selected_output_format()
+                    )
+                    # For every other format, the procedure is the same.
+                    if self.dlg.selected_output_format() == "shp":
+                        options.driverName = "ESRI Shapefile"
+                    elif self.dlg.selected_output_format() == "geojson":
+                        options.driverName = "GeoJSON"
+                    if Qgis.QGIS_VERSION_INT > 32000:
+                        QgsVectorFileWriter.writeAsVectorFormatV3(
+                            self.new_layer,
+                            output,
+                            context,
+                            options,
+                        )
+                    else:
+                        QgsVectorFileWriter.writeAsVectorFormatV2(
+                            self.new_layer,
+                            output,
+                            context,
+                            options,
+                        )
+                    self.new_layer = QgsVectorLayer(
+                        output,
+                        str(__layer_name__),
+                        "ogr",
+                    )
+            if self.dlg.add_to_project_checkbox.isChecked():
+                # If output format is a SHP or a GEOJSON or if the
+                # layers are not saved. Saved GPKG are processed
+                # differently.
+                self.project.instance().addMapLayer(self.new_layer, False)
+                self.group.addLayer(self.new_layer)
         # Once it's finished, the ProgressBar is set back to 0
         self.dlg.thread.finish()
         self.dlg.select_progress_bar_label.setText("")
@@ -436,59 +404,21 @@ class InaturalistExtractorPlugin:
         self.dlg.close()
         self.pluginIsActive = False
 
-
-class InternetChecker(QObject):
-    """Constructor.
-
-    Class wich is going to ping a website
-    to know if the user is connected to internet.
-    """
-
-    finished = pyqtSignal()
-
-    def __init__(self, parent=None, manager=None):
-        super().__init__(parent)
-        self._manager = manager
-
-    @property
-    def manager(self):
-        return self._manager
-
-    @property
-    def pending_ping(self):
-        return self._pending_ping
-
-    def ping(self, url):
-        qrequest = QNetworkRequest(QUrl(url))
-        reply = self.manager.get(qrequest)
-        reply.finished.connect(lambda: self.handle_finished(reply))
-
-    def handle_finished(self, reply):
-        if reply.error() != QNetworkReply.NoError:
-            # If the user does not have an internet connexion,
-            # the plugin does not launch.
-            msg = QMessageBox()
-            if reply.error() == 403:
-                msg.critical(
-                    None,
-                    self.tr("Error"),
-                    self.tr("Github is down."),
-                )
-            elif reply.error() == 3:
-                msg.critical(
-                    None,
-                    self.tr("Error"),
-                    self.tr("You are not connected to the Internet."),
-                )
-            else:
-                msg.critical(
-                    None,
-                    self.tr("Error"),
-                    self.tr(
-                        "Code error : {code}\nGo to\n{tracker}\nto report the issue.".format(
-                            code=str(reply.error()), tracker=__uri_tracker__
-                        )
-                    ),
-                )
-        else:
-            self.finished.emit()
+    def add_field(self):
+        self.new_layer.startEditing()
+        self.new_layer.addAttribute(QgsField("id", QVariant.Int, "integer", 10))
+        self.new_layer.addAttribute(
+            QgsField("iconic_taxon_name", QVariant.String, "string", 254)
+        )
+        self.new_layer.addAttribute(QgsField("taxon_id", QVariant.Int, "integer", 10))
+        self.new_layer.addAttribute(QgsField("rank", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(QgsField("name", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(QgsField("obs", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(QgsField("date", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(QgsField("quality", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(QgsField("url", QVariant.String, "string", 254))
+        self.new_layer.addAttribute(
+            QgsField("taxon_url", QVariant.String, "string", 254)
+        )
+        self.new_layer.commitChanges()
+        self.new_layer.triggerRepaint()

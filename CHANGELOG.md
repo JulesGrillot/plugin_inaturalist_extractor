@@ -27,3 +27,9 @@ Unreleased
 - Correction layer export support
 - Correction crs errors
 - Add API Good practices (User-Agent, per_page limit, max obs, warning)
+
+## 0.3.0 - 2025-02-23
+
+- Correction layer Shapefile export support
+- Correction layer GeoJson export support
+- Improve code
