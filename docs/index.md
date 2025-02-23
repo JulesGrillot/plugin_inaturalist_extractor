@@ -1,4 +1,4 @@
-# {{ title }} - Documentation
+# {{ plugin_name }} - Documentation
 
 > **Description:** {{ description }}  
 > **Author and contributors:** {{ author }}  
