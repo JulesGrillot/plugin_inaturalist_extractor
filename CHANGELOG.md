@@ -33,3 +33,7 @@ Unreleased
 - Correction layer Shapefile export support
 - Correction layer GeoJson export support
 - Improve code
+
+## 0.3.1 - 2025-02-23
+
+- Make dialog appear again after launching extraction
