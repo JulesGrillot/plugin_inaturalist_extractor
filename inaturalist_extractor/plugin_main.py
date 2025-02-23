@@ -40,11 +40,7 @@ from inaturalist_extractor.__about__ import (
 )
 from inaturalist_extractor.gui.dlg_main import InaturalistExtractorDialog
 from inaturalist_extractor.gui.dlg_settings import PlgOptionsFactory
-from inaturalist_extractor.processing import (
-    ImportData,
-    InaturalistExtractorProvider,
-    MaxObs,
-)
+from inaturalist_extractor.processing import ImportData, InaturalistExtractorProvider
 from inaturalist_extractor.toolbelt import InternetChecker, PlgLogger
 
 # ############################################################################
@@ -237,16 +233,10 @@ class InaturalistExtractorPlugin:
         the QGIS project
 
         """
-        get_max_obs = MaxObs(
-            self.manager,
-            self.dlg.extent,
-            self.url,
-        )
+        self.start_data_import(self.dlg.nb_obs)
 
-        get_max_obs.finished_dl.connect(lambda: self.start_data_import(get_max_obs))
-
-    def start_data_import(self, sender):
-        if sender.nb_obs > 0:
+    def start_data_import(self, nb_obs):
+        if nb_obs > 0:
             # Creation of the folder name
             today = datetime.datetime.now()
             year = today.year
@@ -293,7 +283,7 @@ class InaturalistExtractorPlugin:
                 self.url,
             )
 
-            self.import_data.download(sender.nb_obs)
+            self.import_data.download(nb_obs)
             self.import_data.finished_dl.connect(self.finished_import)
         else:
             # If there is no observation in the extent.

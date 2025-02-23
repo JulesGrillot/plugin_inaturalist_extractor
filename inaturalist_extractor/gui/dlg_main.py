@@ -38,11 +38,11 @@ from qgis.PyQt.QtWidgets import (
 # project
 from inaturalist_extractor.__about__ import (
     __obs_limit__,
+    __plugin_name__,
     __service_credit__,
     __service_crs__,
     __service_logo__,
     __service_metadata__,
-    __service_name__,
     __uri_homepage__,
 )
 from inaturalist_extractor.processing import MaxObs, RectangleDrawTool
@@ -62,7 +62,7 @@ class InaturalistExtractorDialog(QDialog):
         at run time.
         """
         super(InaturalistExtractorDialog, self).__init__()
-        self.setObjectName("{} Extractor".format(__service_name__))
+        self.setObjectName("{}".format(__plugin_name__))
 
         self.iface = iface
         self.project = project
@@ -74,7 +74,7 @@ class InaturalistExtractorDialog(QDialog):
         self.rectangle = None
         self.nb_obs = 0
 
-        self.setWindowTitle("{} Extractor".format(__service_name__))
+        self.setWindowTitle("{}".format(__plugin_name__))
 
         self.layout = QVBoxLayout()
         extent_check_group = QButtonGroup(self)
