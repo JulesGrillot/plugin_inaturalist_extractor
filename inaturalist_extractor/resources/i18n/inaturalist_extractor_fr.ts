@@ -2,6 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>ImportData</name>
+    <message>
+        <location filename="../../processing/import_data.py" line="143"/>
+        <source>Downloaded data : </source>
+        <translation>Données téléchargées :</translation>
+    </message>
+</context>
+<context>
     <name>InaturalistExtractorDialog</name>
     <message>
         <location filename="../../gui/dlg_main.py" line="101"/>
@@ -89,29 +97,58 @@ en sortie :</translation>
 <context>
     <name>InaturalistExtractorPlugin</name>
     <message>
-        <location filename="../../plugin_main.py" line="104"/>
+        <location filename="../../plugin_main.py" line="101"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="113"/>
+        <location filename="../../plugin_main.py" line="110"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="301"/>
+        <location filename="../../plugin_main.py" line="293"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="301"/>
+        <location filename="../../plugin_main.py" line="293"/>
         <source>No Observation in the selected extent.</source>
         <translation>Pas d'observations dans l'emprise sélectionnée.</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="97"/>
+        <location filename="../../plugin_main.py" line="94"/>
         <source>{}</source>
         <translation>iNaturalist Extractor</translation>
+    </message>
+</context>
+<context>
+    <name>InternetChecker</name>
+    <message>
+        <location filename="../../toolbelt/internet_checker.py" line="53"/>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <location filename="../../toolbelt/internet_checker.py" line="41"/>
+        <source>Github is down.</source>
+        <translation>Github est injoignable.</translation>
+    </message>
+    <message>
+        <location filename="../../toolbelt/internet_checker.py" line="47"/>
+        <source>You are not connected to the Internet.</source>
+        <translation>Vous n'êtes pas connecté à internet.</translation>
+    </message>
+    <message>
+        <location filename="../../toolbelt/internet_checker.py" line="53"/>
+        <source>Code error : {code}
+Go to
+{tracker}
+to report the issue.</source>
+        <translation>Code erreur : {code}
+Rendez-vous ici
+{tracker}
+pour renseigner l'erreur.</translation>
     </message>
 </context>
 <context>
