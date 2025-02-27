@@ -80,7 +80,7 @@ class ImportData(QObject):
             else:
                 self.limit = self.max_obs
             # Laucnch The progress bar
-            if int(self.max_obs / self.limit) == 1:
+            if float(self.max_obs / self.limit) <= 1:
                 self.total_pages = int(self.max_obs / self.limit)
             else:
                 self.total_pages = int(self.max_obs / self.limit) + 1

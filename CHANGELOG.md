@@ -43,3 +43,9 @@ Unreleased
 - Add fields (description, user info, precision and 3 pictures)
 - Verify that some properties exists in the result of the json, find a way to improve this part, 2 much if
 - Add style to created layer
+
+## 0.4.1 - 2025-02-27
+
+- Add possibility to extract not validated data
+- Modify style to add casual observation
+- Correct missing obs
