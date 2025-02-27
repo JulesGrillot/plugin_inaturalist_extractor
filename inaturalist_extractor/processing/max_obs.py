@@ -18,11 +18,13 @@ class MaxObs(QObject):
         network_manager=None,
         extent=None,
         url=None,
+        dlg=None,
     ):
         super().__init__()
         self.network_manager = network_manager
         self.extent = extent
         self.url = url
+        self.dlg = dlg
 
         self._pending_downloads = 0
         self.nb_obs = 0
@@ -34,12 +36,17 @@ class MaxObs(QObject):
         return self._pending_downloads
 
     def download(self):
-        url = "{url}/?verifiable=true&spam=false&swlng={xmin}&swlat={ymin}&nelng={xmax}&nelat={ymax}&locale=fr&per_page=1".format(  # noqa: E501
+        if self.dlg.verifiable_checkbox.isChecked():
+            verifiable = "verifiable=true&"
+        else:
+            verifiable = ""
+        url = "{url}/?{verifiable}spam=false&swlng={xmin}&swlat={ymin}&nelng={xmax}&nelat={ymax}&locale=fr&per_page=1".format(  # noqa: E501
             url=self.url,
             xmin=self.extent.xMinimum(),
             ymin=self.extent.yMinimum(),
             xmax=self.extent.xMaximum(),
             ymax=self.extent.yMaximum(),
+            verifiable=verifiable,
         )
         url = QUrl(url)
         request = QNetworkRequest(url)

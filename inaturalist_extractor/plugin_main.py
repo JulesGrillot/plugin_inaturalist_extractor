@@ -389,9 +389,14 @@ class InaturalistExtractorPlugin:
                 # differently.
                 self.project.instance().addMapLayer(self.new_layer, False)
                 self.group.addLayer(self.new_layer)
-                self.new_layer.loadNamedStyle(
-                    str(__styles_path__) + "/" + "research_style.qml"
-                )
+                if not self.dlg.verified_checkbox.isChecked():
+                    self.new_layer.loadNamedStyle(
+                        str(__styles_path__) + "/" + "casual_style.qml"
+                    )
+                else:
+                    self.new_layer.loadNamedStyle(
+                        str(__styles_path__) + "/" + "research_style.qml"
+                    )
                 self.new_layer.triggerRepaint()
 
         # Once it's finished, the ProgressBar is set back to 0

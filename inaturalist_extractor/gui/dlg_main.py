@@ -178,6 +178,13 @@ class InaturalistExtractorDialog(QDialog):
         self.layout.addLayout(self.extent_layout)
         self.layout.insertSpacing(100, 25)
 
+        # Validated data selection
+        self.verifiable_checkbox = QCheckBox(self)
+        self.verifiable_checkbox.setText(self.tr("Extract only verifiable data :"))
+        self.verifiable_checkbox.setChecked(False)
+        self.layout.addWidget(self.verifiable_checkbox)
+        self.layout.insertSpacing(100, 25)
+
         # Crs Selection
         self.geom_layout = QHBoxLayout()
         select_crs_label = QLabel(self)
@@ -284,6 +291,8 @@ class InaturalistExtractorDialog(QDialog):
         self.draw_rectangle_checkbox.stateChanged.connect(self.button_box.setDisabled)
         self.draw_rectangle_checkbox.stateChanged.connect(self.check_rectangle)
 
+        self.verifiable_checkbox.stateChanged.connect(self.data_type_selection)
+
         self.select_layer_checkbox.stateChanged.connect(
             self.select_layer_combo_box.setEnabled
         )
@@ -336,6 +345,7 @@ class InaturalistExtractorDialog(QDialog):
                 self.manager,
                 transformed_extent,
                 self.url,
+                self,
             )
             get_max_obs.finished_dl.connect(lambda: self.update_nb_obs(get_max_obs))
 
@@ -420,10 +430,12 @@ class InaturalistExtractorDialog(QDialog):
         if self.select_layer_checkbox.isChecked():
             if self.select_layer_combo_box is None:
                 self.rectangle = None
+                self.select_progress_bar_label.setText("")
             else:
                 self.rectangle = True
         elif self.draw_rectangle_checkbox.isChecked():
             self.rectangle = None
+            self.select_progress_bar_label.setText("")
 
     def transform_crs(self, rectangle, input_crs, output_crs):
         # Reproject a rectangle to the project crs
@@ -452,17 +464,33 @@ class InaturalistExtractorDialog(QDialog):
         self.iface.mainWindow().activateWindow()
         self.canvas.setMapTool(self.rectangle_tool)
 
+    def data_type_selection(self):
+        if self.select_layer_checkbox.isChecked():
+            if self.select_layer_combo_box is None:
+                pass
+            else:
+                self.check_layer_size()
+        elif self.draw_rectangle_checkbox.isChecked():
+            if self.rectangle:
+                self.rectangle_drawned()
+            else:
+                pass
+
     def rectangle_drawned(self):
         self.rectangle = True
         get_max_obs = MaxObs(
             self.manager,
             self.rectangle_tool.new_extent,
             self.url,
+            self,
         )
         get_max_obs.finished_dl.connect(lambda: self.update_nb_obs(get_max_obs))
 
     def update_nb_obs(self, sender):
         self.nb_obs = sender.nb_obs
+        self.select_progress_bar_label.setText(
+            self.tr("Data to download : " + str(self.nb_obs))
+        )
         self.activate_window()
 
     def activate_window(self):

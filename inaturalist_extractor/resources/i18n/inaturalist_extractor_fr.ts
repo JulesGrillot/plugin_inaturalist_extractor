@@ -4,7 +4,7 @@
 <context>
     <name>ImportData</name>
     <message>
-        <location filename="../../processing/import_data.py" line="143"/>
+        <location filename="../../processing/import_data.py" line="148"/>
         <source>Downloaded data : </source>
         <translation>Données téléchargées :</translation>
     </message>
@@ -42,44 +42,44 @@
         <translation>Utiliser l'emprise d'une couche pour l'extraction :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="184"/>
+        <location filename="../../gui/dlg_main.py" line="191"/>
         <source>Select outputs&apos;
 coordinate system :</source>
         <translation>Sélectionner la projection
 en sortie :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="194"/>
+        <location filename="../../gui/dlg_main.py" line="201"/>
         <source>Save the results :</source>
         <translation>Sauvergarder les résultats :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="199"/>
+        <location filename="../../gui/dlg_main.py" line="206"/>
         <source>Add exported data to the project</source>
         <translation>Ajouter les données exportées au projet</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="233"/>
+        <location filename="../../gui/dlg_main.py" line="240"/>
         <source>Explore folders :</source>
         <translation>Parcourir les dossiers :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="251"/>
+        <location filename="../../gui/dlg_main.py" line="258"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="252"/>
+        <location filename="../../gui/dlg_main.py" line="259"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="404"/>
+        <location filename="../../gui/dlg_main.py" line="414"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="379"/>
+        <location filename="../../gui/dlg_main.py" line="389"/>
         <source>Select an output folder</source>
         <translation>Sélectionner un dossier de sortie</translation>
     </message>
@@ -89,9 +89,19 @@ en sortie :</translation>
         <translation>Ce plugin n'a pas été conçu pour réaliser de l'extraction massive de données&lt;p&gt;comme spécifié dans les &lt;a href=&quot;https://www.inaturalist.org/pages/api+recommended+practices&quot;&gt;Bonnes pratiques de l'API&lt;/a&gt;:&lt;p&gt;L'API est destinée à être utilisée pour construire des applications&lt;p&gt;et pour récupérer des petites ou moyennes quantités de données.&lt;p&gt;Elle n'est pas déstinée à extraire des données en masse.</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="404"/>
+        <location filename="../../gui/dlg_main.py" line="414"/>
         <source>Max Observation count is reached, select a smaller area.</source>
-        <translation>Le nombre d'observation maxium est atteint, sélectionnez une zone plus petite.</translation>
+        <translation>Le nombre d'observation maximum est atteint, sélectionnez une zone plus petite.</translation>
+    </message>
+    <message>
+        <location filename="../../gui/dlg_main.py" line="183"/>
+        <source>Extract only verifiable data :</source>
+        <translation>Extraire uniquement les données valides</translation>
+    </message>
+    <message>
+        <location filename="../../gui/dlg_main.py" line="491"/>
+        <source>Data to download : </source>
+        <translation>Données à télécharger :</translation>
     </message>
 </context>
 <context>

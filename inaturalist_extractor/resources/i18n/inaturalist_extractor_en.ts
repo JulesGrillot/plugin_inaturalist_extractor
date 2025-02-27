@@ -2,122 +2,155 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>ImportData</name>
+    <message>
+        <location filename="../../processing/import_data.py" line="148"/>
+        <source>Downloaded data : </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InaturalistExtractorDialog</name>
     <message>
-        <location filename="../../gui/dlg_main.py" line="85"/>
+        <location filename="../../gui/dlg_main.py" line="101"/>
         <source>Data provided by :</source>
         <translation>Data provided by :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="101"/>
+        <location filename="../../gui/dlg_main.py" line="118"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="108"/>
+        <location filename="../../gui/dlg_main.py" line="125"/>
         <source>Metadata</source>
         <translation>Metadata</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="119"/>
+        <location filename="../../gui/dlg_main.py" line="136"/>
         <source>Draw an extent to extract data :</source>
         <translation>Draw an extent to extract data :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="131"/>
+        <location filename="../../gui/dlg_main.py" line="148"/>
         <source>Draw an extent</source>
         <translation>Draw an extent</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="139"/>
+        <location filename="../../gui/dlg_main.py" line="156"/>
         <source>Use layer extent to extract data :</source>
         <translation>Use layer extent to extract data :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="167"/>
+        <location filename="../../gui/dlg_main.py" line="191"/>
         <source>Select outputs&apos;
 coordinate system :</source>
-        <translation>Select outputs&apos;
+        <translation>Select outputs'
 coordinate system :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="177"/>
+        <location filename="../../gui/dlg_main.py" line="201"/>
         <source>Save the results :</source>
         <translation>Save the results :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="182"/>
+        <location filename="../../gui/dlg_main.py" line="206"/>
         <source>Add exported data to the project</source>
         <translation>Add exported data to the project</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="216"/>
+        <location filename="../../gui/dlg_main.py" line="240"/>
         <source>Explore folders :</source>
         <translation>Explore folders :</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="234"/>
+        <location filename="../../gui/dlg_main.py" line="258"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="235"/>
+        <location filename="../../gui/dlg_main.py" line="259"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="320"/>
+        <location filename="../../gui/dlg_main.py" line="414"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
     <message>
-        <location filename="../../gui/dlg_main.py" line="320"/>
-        <source>Selected layer is very large (degraded performance)</source>
-        <translation>Selected layer is very large (degraded performance)</translation>
-    </message>
-    <message>
-        <location filename="../../gui/dlg_main.py" line="365"/>
+        <location filename="../../gui/dlg_main.py" line="389"/>
         <source>Select an output folder</source>
         <translation>Select an output folder</translation>
+    </message>
+    <message>
+        <location filename="../../gui/dlg_main.py" line="86"/>
+        <source>This plugin is not meant for data scrapping as specified in the &lt;a href=&quot;https://www.inaturalist.org/pages/api+recommended+practices&quot;&gt;API Recommanded practices&lt;/a&gt;:&lt;p&gt;The API is meant to be used for building applications and for fetching small to medium&lt;p&gt;batches of data. It is not meant to be a way to download data in bulk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gui/dlg_main.py" line="183"/>
+        <source>Extract only verified data :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gui/dlg_main.py" line="414"/>
+        <source>Max Observation count is reached, select a smaller area.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gui/dlg_main.py" line="491"/>
+        <source>Data to download : </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InaturalistExtractorPlugin</name>
     <message>
-        <location filename="../../plugin_main.py" line="96"/>
-        <source>{} Extractor</source>
-        <translation>{} Extractor</translation>
-    </message>
-    <message>
-        <location filename="../../plugin_main.py" line="103"/>
+        <location filename="../../plugin_main.py" line="101"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="112"/>
+        <location filename="../../plugin_main.py" line="110"/>
         <source>Settings</source>
         <translation>Settings</translation>
+    </message>
+    <message>
+        <location filename="../../plugin_main.py" line="94"/>
+        <source>{}</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../plugin_main.py" line="293"/>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <location filename="../../plugin_main.py" line="293"/>
+        <source>No Observation in the selected extent.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>InternetChecker</name>
     <message>
-        <location filename="../../plugin_main.py" line="418"/>
+        <location filename="../../toolbelt/internet_checker.py" line="53"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="406"/>
+        <location filename="../../toolbelt/internet_checker.py" line="41"/>
         <source>Github is down.</source>
         <translation>Github is down.</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="412"/>
+        <location filename="../../toolbelt/internet_checker.py" line="47"/>
         <source>You are not connected to the Internet.</source>
         <translation>You are not connected to the Internet.</translation>
     </message>
     <message>
-        <location filename="../../plugin_main.py" line="418"/>
+        <location filename="../../toolbelt/internet_checker.py" line="53"/>
         <source>Code error : {code}
 Go to
 {tracker}
@@ -126,19 +159,6 @@ to report the issue.</source>
 Go to
 {tracker}
 to report the issue.</translation>
-    </message>
-</context>
-<context>
-    <name>RectangleDrawTool</name>
-    <message>
-        <location filename="../../processing/rectangle_tool.py" line="125"/>
-        <source>Warning</source>
-        <translation>Warning</translation>
-    </message>
-    <message>
-        <location filename="../../processing/rectangle_tool.py" line="125"/>
-        <source>Drawned rectangle is very large (degraded performances)</source>
-        <translation>Drawned rectangle is very large (degraded performances)</translation>
     </message>
 </context>
 <context>

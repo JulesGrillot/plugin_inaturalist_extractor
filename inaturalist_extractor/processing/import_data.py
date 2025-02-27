@@ -90,7 +90,11 @@ class ImportData(QObject):
                 self.tr("Downloaded data : " + str(0) + "/" + str(self.max_obs))
             )
         # Change the url after every download page with the pending variables.
-        url = "{url}?verifiable=true&order_by=id&order=desc&spam=false&page={page}&swlng={xmin}&swlat={ymin}&nelng={xmax}&nelat={ymax}&locale=fr&per_page={limit}".format(  # noqa: E501
+        if self.dlg.verifiable_checkbox.isChecked():
+            verifiable = "verifiable=true&"
+        else:
+            verifiable = ""
+        url = "{url}?verifiable={verifiable}&order_by=id&order=desc&spam=false&page={page}&swlng={xmin}&swlat={ymin}&nelng={xmax}&nelat={ymax}&locale=fr&per_page={limit}".format(  # noqa: E501
             url=self.url,
             page=self.pending_pages,
             xmin=self.extent.xMinimum(),
@@ -98,6 +102,7 @@ class ImportData(QObject):
             xmax=self.extent.xMaximum(),
             ymax=self.extent.yMaximum(),
             limit=self.limit,
+            verifiable=verifiable,
         )
 
         url = QUrl(url)

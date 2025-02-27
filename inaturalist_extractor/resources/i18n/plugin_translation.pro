@@ -10,5 +10,5 @@ SOURCES= ../../plugin_main.py \
     ../../toolbelt/internet_checker.py \
     ../../toolbelt/preferences.py
 
-TRANSLATIONS = gbif_extractor_en.ts \
+TRANSLATIONS = inaturalist_extractor_en.ts \
     inaturalist_extractor_fr.ts
