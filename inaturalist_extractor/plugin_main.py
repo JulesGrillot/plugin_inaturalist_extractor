@@ -389,7 +389,7 @@ class InaturalistExtractorPlugin:
                 # differently.
                 self.project.instance().addMapLayer(self.new_layer, False)
                 self.group.addLayer(self.new_layer)
-                if not self.dlg.verified_checkbox.isChecked():
+                if not self.dlg.verifiable_checkbox.isChecked():
                     self.new_layer.loadNamedStyle(
                         str(__styles_path__) + "/" + "casual_style.qml"
                     )
