@@ -22,13 +22,14 @@ qgisMinimumVersion=3.28
 qgisMaximumVersion=3.99
 
 # versioning
-version=0.4.1
+version=0.4.2
 changelog=
     0.2.0 add API recommandations, warning on usage, User-Agent, per_page limit, forbid user to dl more than 10k data, correct layer export and crs
     0.3.0 correct geojson and shapefile export, improve code
     0.3.1 make dialog appear again after launching extraction
     0.4.0 correct some fields error, add new fields, add style to exported layer
     0.4.1 add possibilty to extract casual obs, modify style, missing obs correction
+    0.4.2 correction if there is no taxon in the observation
 
 [service]
 plugin_name=iNaturalist_Extractor

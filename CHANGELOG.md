@@ -49,3 +49,8 @@ Unreleased
 - Add possibility to extract not validated data
 - Modify style to add casual observation
 - Correct missing obs
+
+## 0.4.2 - 2025-04-04
+
+- Correct translation
+- Correct bug on observation without taxons

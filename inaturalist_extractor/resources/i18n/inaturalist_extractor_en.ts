@@ -90,7 +90,7 @@ coordinate system :</translation>
     </message>
     <message>
         <location filename="../../gui/dlg_main.py" line="183"/>
-        <source>Extract only verified data :</source>
+        <source>Extract only verifiable data :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

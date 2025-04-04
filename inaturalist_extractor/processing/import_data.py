@@ -166,120 +166,123 @@ class ImportData(QObject):
     def specific_api_operation(self, request_result):
         # add a feature in the layer for every observation
         for obs in request_result["results"]:
-            # Create feature
-            new_feature = QgsFeature(self.layer.fields())
+            if obs["taxon"]:
+                # Create feature
+                new_feature = QgsFeature(self.layer.fields())
 
-            # Add a geometry
-            new_geom = QgsGeometry.fromPointXY(
-                QgsPointXY(
-                    obs["geojson"]["coordinates"][0],
-                    obs["geojson"]["coordinates"][1],
+                # Add a geometry
+                new_geom = QgsGeometry.fromPointXY(
+                    QgsPointXY(
+                        obs["geojson"]["coordinates"][0],
+                        obs["geojson"]["coordinates"][1],
+                    )
                 )
-            )
-            # Function used to reproject a geometry
-            new_geom.transform(
-                QgsCoordinateTransform(
-                    QgsCoordinateReferenceSystem(int(__service_crs__)),
-                    self.dlg.crs_selector.crs(),
-                    self.project,
+                # Function used to reproject a geometry
+                new_geom.transform(
+                    QgsCoordinateTransform(
+                        QgsCoordinateReferenceSystem(int(__service_crs__)),
+                        self.dlg.crs_selector.crs(),
+                        self.project,
+                    )
                 )
-            )
-            new_feature.setGeometry(new_geom)
+                new_feature.setGeometry(new_geom)
 
-            # Complete feature field one by one
-            field_index = 0
-            new_feature.setAttribute(field_index, obs["id"])
-            field_index += 1
-            if "iconic_taxon_name" in list(obs["taxon"].keys()):
-                new_feature.setAttribute(field_index, obs["taxon"]["iconic_taxon_name"])
-            else:
-                new_feature.setAttribute(field_index, NULL)
-            field_index += 1
+                # Complete feature field one by one
+                field_index = 0
+                new_feature.setAttribute(field_index, obs["id"])
+                field_index += 1
+                if "iconic_taxon_name" in list(obs["taxon"].keys()):
+                    new_feature.setAttribute(
+                        field_index, obs["taxon"]["iconic_taxon_name"]
+                    )
+                else:
+                    new_feature.setAttribute(field_index, NULL)
+                field_index += 1
 
-            if "min_species_taxon_id" in list(obs["taxon"].keys()):
-                new_feature.setAttribute(
-                    field_index, obs["taxon"]["min_species_taxon_id"]
-                )
-            else:
-                new_feature.setAttribute(field_index, NULL)
-            field_index += 1
+                if "min_species_taxon_id" in list(obs["taxon"].keys()):
+                    new_feature.setAttribute(
+                        field_index, obs["taxon"]["min_species_taxon_id"]
+                    )
+                else:
+                    new_feature.setAttribute(field_index, NULL)
+                field_index += 1
 
-            if "rank" in list(obs["taxon"].keys()):
-                new_feature.setAttribute(field_index, obs["taxon"]["rank"])
-            else:
-                new_feature.setAttribute(field_index, NULL)
-            field_index += 1
+                if "rank" in list(obs["taxon"].keys()):
+                    new_feature.setAttribute(field_index, obs["taxon"]["rank"])
+                else:
+                    new_feature.setAttribute(field_index, NULL)
+                field_index += 1
 
-            if "name" in list(obs["taxon"].keys()):
-                new_feature.setAttribute(field_index, obs["taxon"]["name"])
-            else:
-                new_feature.setAttribute(field_index, NULL)
+                if "name" in list(obs["taxon"].keys()):
+                    new_feature.setAttribute(field_index, obs["taxon"]["name"])
+                else:
+                    new_feature.setAttribute(field_index, NULL)
 
-            field_index += 1
+                field_index += 1
 
-            new_feature.setAttribute(field_index, obs["user"]["login"])
-            field_index += 1
+                new_feature.setAttribute(field_index, obs["user"]["login"])
+                field_index += 1
 
-            new_feature.setAttribute(field_index, obs["user"]["name"])
-            field_index += 1
+                new_feature.setAttribute(field_index, obs["user"]["name"])
+                field_index += 1
 
-            if obs["time_observed_at"] != "None":
-                new_feature.setAttribute(field_index, obs["time_observed_at"])
-            elif obs["observed_on_details"]["date"] != "None":
-                new_feature.setAttribute(
-                    field_index, obs["observed_on_details"]["date"]
-                )
-            else:
-                new_feature.setAttribute(field_index, NULL)
-            field_index += 1
+                if obs["time_observed_at"] != "None":
+                    new_feature.setAttribute(field_index, obs["time_observed_at"])
+                elif obs["observed_on_details"]["date"] != "None":
+                    new_feature.setAttribute(
+                        field_index, obs["observed_on_details"]["date"]
+                    )
+                else:
+                    new_feature.setAttribute(field_index, NULL)
+                field_index += 1
 
-            new_feature.setAttribute(field_index, obs["description"])
-            field_index += 1
+                new_feature.setAttribute(field_index, obs["description"])
+                field_index += 1
 
-            new_feature.setAttribute(field_index, obs["quality_grade"])
-            field_index += 1
+                new_feature.setAttribute(field_index, obs["quality_grade"])
+                field_index += 1
 
-            new_feature.setAttribute(field_index, obs["geoprivacy"])
-            field_index += 1
+                new_feature.setAttribute(field_index, obs["geoprivacy"])
+                field_index += 1
 
-            new_feature.setAttribute(field_index, obs["positional_accuracy"])
-            field_index += 1
+                new_feature.setAttribute(field_index, obs["positional_accuracy"])
+                field_index += 1
 
-            new_feature.setAttribute(field_index, obs["uri"])
-            field_index += 1
+                new_feature.setAttribute(field_index, obs["uri"])
+                field_index += 1
 
-            new_feature.setAttribute(
-                field_index,
-                "https://www.inaturalist.org/taxa/{taxon_id}".format(
-                    taxon_id=obs["taxon"]["min_species_taxon_id"]
-                ),
-            )
-            field_index += 1
-            if len(obs["observation_photos"]) > 0:
                 new_feature.setAttribute(
                     field_index,
-                    obs["observation_photos"][0]["photo"]["url"].replace(
-                        "square.jpg", "large.jpg"
+                    "https://www.inaturalist.org/taxa/{taxon_id}".format(
+                        taxon_id=obs["taxon"]["min_species_taxon_id"]
                     ),
                 )
                 field_index += 1
-
-                if len(obs["observation_photos"]) > 1:
+                if len(obs["observation_photos"]) > 0:
                     new_feature.setAttribute(
                         field_index,
-                        obs["observation_photos"][1]["photo"]["url"].replace(
+                        obs["observation_photos"][0]["photo"]["url"].replace(
                             "square.jpg", "large.jpg"
                         ),
                     )
                     field_index += 1
 
-                    if len(obs["observation_photos"]) > 2:
+                    if len(obs["observation_photos"]) > 1:
                         new_feature.setAttribute(
                             field_index,
-                            obs["observation_photos"][2]["photo"]["url"].replace(
+                            obs["observation_photos"][1]["photo"]["url"].replace(
                                 "square.jpg", "large.jpg"
                             ),
                         )
+                        field_index += 1
 
-            # Add the feature to the list.
-            self.new_features.append(new_feature)
+                        if len(obs["observation_photos"]) > 2:
+                            new_feature.setAttribute(
+                                field_index,
+                                obs["observation_photos"][2]["photo"]["url"].replace(
+                                    "square.jpg", "large.jpg"
+                                ),
+                            )
+
+                # Add the feature to the list.
+                self.new_features.append(new_feature)
