@@ -1,9 +1,9 @@
 [general]
 name=iNaturalist Extractor
-about=Extract data from iNaturalist database from an extent.
+about=Extract data from iNaturalist database based on an extent.
 category=Database
 hasProcessingProvider=False
-description=Extract data from iNaturalist database drom an extent.
+description=Extract data from iNaturalist database based on an extent.
 icon=resources/images/default_icon.png
 style_folder=resources/styles
 tags=data, iNaturalist, environement
